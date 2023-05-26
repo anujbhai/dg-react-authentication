@@ -2,9 +2,7 @@ import Register from "./components/Register"
 
 function App() {
   return (
-    <main>
-      <p>Hello</p>
-
+    <main className="App">
       <Register />
     </main>
   )
