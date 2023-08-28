@@ -1,13 +1,13 @@
+// import Register from "./components/Register";
 import Login from "./components/Login"
-import Register from "./components/Register"
 
 function App() {
   return (
     <main className="App">
-      {/*<Register />*/}
       <Login />
+      {/*<Registerr />*/}
     </main>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,73 +1,129 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useContext } from 'react';
+
+import AuthContext from '../../context/AuthProvider'
+import axios from '../../api/axios'
+
+const LOGIN_URL = '/auth'
 
 const Login = () => {
-  const userRef = useRef()
-  const errRef = useRef()
+  const { setAuth } = useContext(AuthContext)
 
-  const [user, setUser] = useState('')
-  const [pwd, setPwd] = useState('')
-  const [errMsg, setErrMsg] = useState('')
-  const [success, setSuccess] = useState(false)
+  const userRef = useRef();
+  const errRef = useRef();
 
-  useEffect(() => {
-    userRef.current.focus()
-  }, [])
+  const [user, setUser] = useState('');
+  const [pwd, setPwd] = useState('');
+  const [errMsg, setErrMsg] = useState('');
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    setErrMsg('')
-  }, [user, pwd])
+    userRef.current.focus();
+  }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  useEffect(() => {
+    setErrMsg('');
+  }, [user, pwd]);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  }
+    try {
+      const response = await axios.post(
+        LOGIN_URL,
+        JSON.stringify({ user, pwd }),
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true
+        }
+      )
+
+      //console.log(JSON.stringify(response?.data))
+      console.log(JSON.stringify(response?.data.roles))
+
+      const accessToken = response?.data?.accessToken
+      const roles = response?.data?.roles
+
+      setAuth({ user, pwd, roles, accessToken })
+
+      setUser('')
+      setPwd('')
+      setSuccess(true)
+    } catch (err) {
+      if (!err?.response) {
+        setErrMsg('No server response')
+      } else if (err.response?.status === 400) {
+        setErrMsg('Missing username or password.')
+      } else if (err.response?.status === 401) {
+        setErrMsg('Unauthorized hai')
+      } else {
+        setErrMsg('Login failed! Please try again.')
+      }
+
+      errRef.current.focus()
+    }
+  };
 
   return (
-    <section>
-      <p
-        ref={errRef}
-        className={errMsg ? 'errMsg' : 'offscreen'}
-        aria-live="assertive"
-      >{errMsg}</p>
+    <>
+      {success ? (
+        <section>
+          <h1>You are logged in!</h1>
 
-      <h1>Sign In</h1>
+          <br />
 
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username:</label>
+          <p>
+            <a href="#">Go to home</a>
+          </p>
+        </section>
+      ) : (
+        <section>
+          <p
+            ref={errRef}
+            className={errMsg ? "errMsg" : "offscreen"}
+            aria-live="assertive"
+          >
+            {errMsg}
+          </p>
 
-        <input
-          type="text"
-          id="username"
-          ref={userRef}
-          onChange={e => setPwd(e.target.value)}
-          value={pwd}
-          required
-        />
+          <h1>Sign In</h1>
 
-        <label htmlFor="password">Password:</label>
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="username">Username:</label>
 
-        <input
-          type="password"
-          id="password"
-          onChange={e => setUser(e.target.value)}
-          value={user}
-          required
-        />
+            <input
+              type="text"
+              id="username"
+              ref={userRef}
+              onChange={(e) => setUser(e.target.value)}
+              value={user}
+              required
+            />
 
-        <button>Sign In</button>
-      </form>
+            <label htmlFor="password">Password:</label>
 
-      <p>
-        Do not have an account yet?<br />
-        <span className="line">
-          {/* put router link here */}
-          <a href="#">Sign Up</a>
-        </span>
-      </p>
-    </section>
-  )
-}
+            <input
+              type="password"
+              id="password"
+              onChange={(e) => setPwd(e.target.value)}
+              value={pwd}
+              required
+            />
 
-export default Login
+            <button>Sign In</button>
+          </form>
 
+          <p>
+            Do not have an account yet?
+            <br />
+            <span className="line">
+              {/* put router link here */}
+              <a href="#">Sign Up</a>
+            </span>
+          </p>
+        </section>
+      )}
+    </>
+  );
+};
+
+export default Login;
