@@ -37,8 +37,7 @@ const Login = () => {
         }
       )
 
-      //console.log(JSON.stringify(response?.data))
-      console.log(JSON.stringify(response?.data.roles))
+      console.log(JSON.stringify(response?.data))
 
       const accessToken = response?.data?.accessToken
       const roles = response?.data?.roles
@@ -54,7 +53,7 @@ const Login = () => {
       } else if (err.response?.status === 400) {
         setErrMsg('Missing username or password.')
       } else if (err.response?.status === 401) {
-        setErrMsg('Unauthorized hai')
+        setErrMsg('Unauthorized. invalid username or password')
       } else {
         setErrMsg('Login failed! Please try again.')
       }
@@ -79,7 +78,7 @@ const Login = () => {
         <section>
           <p
             ref={errRef}
-            className={errMsg ? "errMsg" : "offscreen"}
+            className={errMsg ? "errmsg" : "offscreen"}
             aria-live="assertive"
           >
             {errMsg}
