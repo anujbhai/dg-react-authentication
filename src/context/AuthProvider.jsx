@@ -1,8 +1,11 @@
-import { createContext, useState } from "react";
+import { createContext, useState } from "react"
+import PropTypes from 'prop-types'
 
 const AuthContext = createContext({});
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = props => {
+  const {children} = props
+
   const [auth, setAuth] = useState({});
 
   return (
@@ -11,6 +14,10 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+AuthProvider.propTypes = {
+  children: PropTypes.any
+}
 
 export default AuthContext
 
