@@ -68,6 +68,14 @@ button {
   padding: 0.5rem;
 }
 
+ul {
+  list-style-type: none;
+}
+
+h3 {
+  margin-top: 15px;
+}
+
 .instructions {
     font-size: 0.75rem;
     border-radius: 0.5rem;
@@ -111,5 +119,12 @@ button {
 
 .line {
     display: inline-block;
+}
+
+.flexGrow {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
 }
 
