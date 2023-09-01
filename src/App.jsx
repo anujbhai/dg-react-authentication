@@ -1,15 +1,16 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route } from "react-router-dom";
 
-import Layout from './layout';
-import Login from './components/Login'
-import Register from './components/Register'
-import Linkpage from './pages/Linkpage'
-import Unauthorized from './pages/Unauthorized'
-import Home from './pages/Home'
-import Editor from './pages/Editor';
-import Admin from './pages/Admin';
-import Lounge from './pages/Lounge';
-import NotFound from './pages/NotFound';
+import Layout from "./layout";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import RequireAuth from "./components/RequireAuth";
+import Linkpage from "./pages/Linkpage";
+import Unauthorized from "./pages/Unauthorized";
+import Home from "./pages/Home";
+import Editor from "./pages/Editor";
+import Admin from "./pages/Admin";
+import Lounge from "./pages/Lounge";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -22,17 +23,18 @@ function App() {
         <Route path="unauthorized" element={<Unauthorized />} />
 
         {/* protected routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/editor" element={<Editor />} />
-        <Route path="/admin" element={<Admin />} />
-        <Route path="/lounge" element={<Lounge />} />
+        <Route element={<RequireAuth />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/editor" element={<Editor />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/lounge" element={<Lounge />} />
+        </Route>
 
         {/* all */}
         <Route path="*" element={<NotFound />} />
-
       </Route>
     </Routes>
-  )
+  );
 }
 
 export default App;

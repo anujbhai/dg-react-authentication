@@ -7,9 +7,15 @@ const Lounge = () => {
         <h1>Please wait</h1>
 
         <p>
-          You can wait here or visit other page. Click here to go to{" "}
-          <Link to="/">Home</Link>.
+          You can wait here or visit other page.
         </p>
+
+        <div className="flexGrow">
+          <p>
+            Click here to go to{" "}
+            <Link to="/">Home</Link>.
+          </p>
+        </div>
       </section>
     </>
   );

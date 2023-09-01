@@ -6,10 +6,11 @@ const Admin = () => {
       <section>
         <h1>Hello Admin!</h1>
 
-        <p>
-          You can wait here or visit other page. Click here to go to{" "}
-          <Link to="/">Home</Link>.
-        </p>
+        <p>You must have been assigned an Admin role.</p>
+
+        <div className="flexGrow">
+          <p>Click here to go to <Link to="/">Home</Link>.</p>
+        </div>
       </section>
     </>
   );
