@@ -1,9 +1,17 @@
-import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+import AuthContext from '../../context/AuthProvider'
 
 const Home = () => {
+  const { setAuth } = useContext(AuthContext)
+  const navigate = useNavigate()
+
   const handleLogout = (e) => {
     e.preventDefault();
-    console.log("supposed to log out.");
+
+    setAuth({})
+    navigate('/linkpage')
   };
 
   return (
