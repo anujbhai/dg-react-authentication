@@ -1,51 +1,51 @@
-import { useEffect } from "react"
-import { axiosPrivate } from "../api/axios"
-import useAuth from "./useAuth"
-import useRefreshToken from "./useRefreshTokens"
+import { useEffect } from "react";
+import { axiosPrivate } from "../api/axios";
+import useAuth from "./useAuth";
+import useRefreshToken from "./useRefreshTokens";
 
 const useAxiosPrivate = () => {
-  const refresh = useRefreshToken()
-  const { auth } = useAuth()
+  const refresh = useRefreshToken();
+  const { auth } = useAuth();
 
   useEffect(() => {
     const requestInterceptor = axiosPrivate.interceptors.request.use(
-      config => {
-        if (!config.headers['Authorization']) {
-          config.headers['Authorization'] = `Bearer ${auth?.accessToken}`
+      (config) => {
+        if (!config.headers["Authorization"]) {
+          config.headers["Authorization"] = `Bearer ${auth?.accessToken}`;
         }
 
-        return config
+        return config;
       },
-      (err) => Promise.reject(err)
-    )
+      (err) => Promise.reject(err),
+    );
 
     const responseInterceptor = axiosPrivate.interceptors.response.use(
-      response => response,
+      (response) => response,
       async (err) => {
-        const prevReq = err?.config
+        const prevReq = err?.config;
 
         if (err?.response?.status === 403 && !prevReq?.sent) {
-          prevReq.sent = true
+          prevReq.sent = true;
 
-          const newAccessToken = await refresh()
+          const newAccessToken = await refresh();
 
-          prevReq.headers['Authorization'] = `Bearer ${newAccessToken}`
+          prevReq.headers["Authorization"] = `Bearer ${newAccessToken}`;
 
-          return axiosPrivate(prevReq)
+          return axiosPrivate(prevReq);
         }
-
-        (err) => Promise.reject(err)
-      }
-    )
+        
+        return Promise.reject(err)
+      },
+    );
 
     // cleanup on unmount
     return () => {
-      axiosPrivate.interceptors.response.eject(responseInterceptor)
-    }
-  }, [auth, refresh])
+      axiosPrivate.interceptors.request.eject(requestInterceptor);
+      axiosPrivate.interceptors.response.eject(responseInterceptor);
+    };
+  }, [auth, refresh]);
 
-  return axiosPrivate
-}
+  return axiosPrivate;
+};
 
-export default useAxiosPrivate
-
+export default useAxiosPrivate;
