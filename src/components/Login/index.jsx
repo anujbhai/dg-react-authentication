@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import useAuth from '../../hooks/useAuth'
 import axios from '../../api/axios'
-import { useLocation, useNavigate } from 'react-router-dom';
+import useInput from '../../hooks/useInput';
+import useToggle from '../../hooks/useToggle';
 
 const LOGIN_URL = '/auth'
 
 const Login = () => {
-  const { setAuth, persist, setPersist } = useAuth()
+  const { setAuth } = useAuth()
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -16,10 +18,10 @@ const Login = () => {
   const userRef = useRef();
   const errRef = useRef();
 
-  const [user, setUser] = useState('');
+  const [user, resetUser, userAttrs] = useInput('user', '');
   const [pwd, setPwd] = useState('');
   const [errMsg, setErrMsg] = useState('');
-  // const [success, setSuccess] = useState(false);
+  const [check, toggleCheck] = useToggle('persist', false)
 
   useEffect(() => {
     userRef.current.focus();
@@ -49,7 +51,8 @@ const Login = () => {
 
       setAuth({ user, pwd, roles, accessToken })
 
-      setUser('')
+      // setUser('')
+      resetUser()
       setPwd('')
       navigate(from, { replace: true })
     } catch (err) {
@@ -66,14 +69,6 @@ const Login = () => {
       errRef.current.focus()
     }
   };
-
-  const togglePersist = () => {
-    setPersist(prev => !prev)
-  }
-
-  useEffect(() => {
-    localStorage.setItem("persist", persist)
-  }, [persist])
 
   return (
     <section>
@@ -94,8 +89,7 @@ const Login = () => {
           type="text"
           id="username"
           ref={userRef}
-          onChange={(e) => setUser(e.target.value)}
-          value={user}
+          {...userAttrs}
           required
         />
 
@@ -115,8 +109,8 @@ const Login = () => {
           <input
             type="checkbox"
             id="persist"
-            onChange={togglePersist}
-            checked={persist}
+            onChange={toggleCheck}
+            checked={check}
           />
 
           <label htmlFor="persist">Trust this device</label>
