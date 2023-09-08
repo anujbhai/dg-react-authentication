@@ -33,8 +33,8 @@ const useAxiosPrivate = () => {
 
           return axiosPrivate(prevReq);
         }
-        
-        return Promise.reject(err)
+
+        return Promise.reject(err);
       },
     );
 
